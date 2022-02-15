@@ -324,7 +324,9 @@ TEST(UpsampleOpTest, UpsampleOp4DNhwcBilinearTest) {
       10.0f, 10.25f, 10.5f, 10.75f, 11.0f, 11.25f, 11.5f, 11.75f, 12.0f, 12.0f, 12.0f, 12.0f};
 
   test.AddOutput<float>("Y", {N, (int64_t)(H * scales[1]), (int64_t)(W * scales[2]), C}, Y);
-  test.Run(OpTester::ExpectResult::kExpectSuccess, "", {kTensorrtExecutionProvider});  //TensorRT: results mismatch
+  //CUDA: result mismatch due to not implementing NHWC support
+  //TensorRT: results mismatch
+  test.Run(OpTester::ExpectResult::kExpectSuccess, "", {kCudaExecutionProvider, kTensorrtExecutionProvider});
 }
 
 TEST(UpsampleOpTest, UpsampleOp2DBilinearTest) {
