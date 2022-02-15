@@ -338,6 +338,11 @@ struct TensorCheck<BFloat16> {
       } else if (std::isinf(f_expected[i])) {  // Test infinity for equality
         EXPECT_EQ(f_expected[i], f_output[i]) << "Expected infinity. i:" << i << ", provider_type: " << provider_type;
       } else {
+        if (size == 2 && f_expected[0] == 33 && f_expected[1] == 45) {
+          std::cout << "###################" << "\n";
+          std::cout << "output0=" << f_output[0] << "  output1=" << f_output[1] << "\n";
+          std::cout << "###################" << "\n";
+        }
         // the default for existing tests
         const float max_value = fmax(fabs(f_expected[i]), fabs(f_output[i]));
         if (max_value != 0) {  // max_value = 0 means output and expected are 0s.
