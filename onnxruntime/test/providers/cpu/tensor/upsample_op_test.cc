@@ -298,7 +298,6 @@ TEST(UpsampleOpTest, UpsampleOp4DBilinearTest) {
 TEST(UpsampleOpTest, UpsampleOp4DNhwcBilinearTest) {
   OpTester test("Upsample");
 
-  //std::vector<float> scales{1.0f, 2.0f, 4.0f, 1.0f};
   std::vector<float> scales{1.0f, 2.0f, 4.0f, 1.0f};
   test.AddAttribute("mode", "linear");
   test.AddAttribute("scales", scales);
