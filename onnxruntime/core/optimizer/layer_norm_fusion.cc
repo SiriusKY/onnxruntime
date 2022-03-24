@@ -46,7 +46,7 @@ X --> ReduceMean --> Sub --> Pow --> ReduceMean --> Add --> Sqrt --> Div --> Mul
 |                     |
 +---------------------+
 
-In recent pytorch, Cast nodes may be inserted before Pow to ensure that both inputs 'base' and 'power' are the same type 
+In recent pytorch, Cast nodes may be inserted before Pow to ensure that both inputs 'base' and 'power' are the same type
 due to restriction in older opsets. Therefore, Layer Normalization will also handle the case below :
 +---------------------+
 |                     |
@@ -327,12 +327,6 @@ Status LayerNormFusion::ApplyImpl(Graph& graph, bool& modified, int graph_level,
     // remove all the other nodes.
     graph_utils::FinalizeNodeFusion(graph, nodes_to_remove, layer_norm_node);
 
-#ifdef ENABLE_TRAINING
-    // add two extra output defs, so we have 3 output defs that match what gradient builder expected
-    layer_norm_node.MutableOutputDefs().push_back(&graph.GetOrCreateNodeArg(graph.GenerateNodeArgName("saved_mean"), nullptr));
-    layer_norm_node.MutableOutputDefs().push_back(&graph.GetOrCreateNodeArg(graph.GenerateNodeArgName("saved_inv_std_var"), nullptr));
-#endif
-
     modified = true;
   }
   return Status::OK();
@@ -353,7 +347,7 @@ X --> Cast1 --> Pow --> ReduceMean --> Add --> Sqrt --> Div --> Cast2 --> Mul
         +-----------------------------------------------+                Scale
 
 In this pattern, we change the Mul to compute in the same type as Cast1 instead of Cast2,
-and are able to fuse the graph. We might need to add a Cast to the Scale input 
+and are able to fuse the graph. We might need to add a Cast to the Scale input
 of Mul to match the type of Cast1. We add the Cast2 after the fused Layer Norm node.
 This results in the graph:
 
