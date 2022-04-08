@@ -1711,11 +1711,12 @@ class SymbolicShapeInference:
             # present shape: (2, batch_size, num_heads, total_sequence_length, head_size), where total_sequence_length=sequence_length+past_sequence_length
             input_shape = self._get_shape(node, 0)
             past_shape = self._get_shape(node, 4)
-            mask_shape = self._get_shape(node, 3)
+            # mask_shape = self._get_shape(node, 3)
             if len(past_shape) == 5:
-                if len(mask_shape) in [2, 3]:
-                    past_shape[3] = mask_shape[-1]
-                elif isinstance(input_shape[1], int) and isinstance(past_shape[3], int):
+                # if len(mask_shape) in [2, 3]:
+                #     past_shape[3] = mask_shape[-1]
+                # elif isinstance(input_shape[1], int) and isinstance(past_shape[3], int):
+                if isinstance(input_shape[1], int) and isinstance(past_shape[3], int):
                     past_shape[3] = input_shape[1] + past_shape[3]
                 else:
                     past_shape[3] = f"{past_shape[3]}+{input_shape[1]}"
